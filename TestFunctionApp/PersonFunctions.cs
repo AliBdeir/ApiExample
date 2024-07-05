@@ -10,10 +10,10 @@ namespace TestFunctionApp
     public class PersonFunctions(IPersonService service)
     {
         [Function("GetAllPeople")]
-        public async Task<HttpResponseData> GetAllPeople([HttpTrigger(AuthorizationLevel.Function, "get", Route = "Persons")] HttpRequestData req)
+        public async Task<HttpResponseData> GetAllPeople([HttpTrigger(AuthorizationLevel.Function, "get", Route = "Person")] HttpRequestData req)
         {
             SentrySdk.CaptureMessage("Hello, world!", SentryLevel.Error);
-            var people = await service.GetPeople();
+            var people = await service.GetPeopleAsync();
             var response = req.CreateResponse();
             await response.WriteAsJsonAsync(people);
             return response;
@@ -21,10 +21,10 @@ namespace TestFunctionApp
 
 
         [Function("GetPerson")]
-        public async Task<HttpResponseData> GetPerson([HttpTrigger(AuthorizationLevel.Function, "get", Route = "{id}")] HttpRequestData req,
+        public async Task<HttpResponseData> GetPerson([HttpTrigger(AuthorizationLevel.Function, "get", Route = "Person/{id}")] HttpRequestData req,
             int id)
         {
-            var person = await service.GetPerson(id);
+            var person = await service.GetPersonAsync(id);
             var response = req.CreateResponse();
             await response.WriteAsJsonAsync(person);
             return response;
@@ -32,10 +32,10 @@ namespace TestFunctionApp
 
 
         [Function("AddPerson")]
-        public async Task<HttpResponseData> AddPerson([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
+        public async Task<HttpResponseData> AddPerson([HttpTrigger(AuthorizationLevel.Function, "post", Route = "Person")] HttpRequestData req,
             [FromBody] FrontendPerson person)
         {
-            int id = await service.AddPerson(person);
+            int id = await service.AddPersonAsync(person);
             var res = req.CreateResponse();
             await res.WriteAsJsonAsync(new
             {
@@ -48,7 +48,7 @@ namespace TestFunctionApp
         [Function("DeletePerson")]
         public async Task<HttpResponseData> DeletePerson([HttpTrigger(AuthorizationLevel.Function, "delete", Route = "Person/{id}")] HttpRequestData req, int id)
         {
-            await service.DeletePerson(id);
+            await service.DeletePersonAsync(id);
             return req.CreateResponse();
         }
 

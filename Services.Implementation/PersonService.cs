@@ -10,7 +10,7 @@ namespace ServicesImplementation
     public class PersonService(SqlConnection db, ILoggerFactory loggerFactory) : IPersonService
     {
         private readonly ILogger logger = loggerFactory.CreateLogger<PersonService>();
-        public async Task<int> AddPerson(FrontendPerson person)
+        public async Task<int> AddPersonAsync(FrontendPerson person)
         {
             logger.LogInformation("Adding person of name {name} and age {age}", person.Name, person.Age);
             await db.OpenAsync();
@@ -22,15 +22,14 @@ namespace ServicesImplementation
             return insertedId;
         }
 
-        public async Task DeletePerson(int personId)
+        public async Task DeletePersonAsync(int personId)
         {
             logger.LogInformation("Deleting person of ID {personId}", personId);
-            await db.OpenAsync();
             await db.OpenAsync();
             await db.ExecuteAsync("DELETE FROM [Person] WHERE PersonId = @personId", new { personId });
         }
 
-        public async Task<ICollection<FrontendPerson>> GetPeople()
+        public async Task<ICollection<FrontendPerson>> GetPeopleAsync()
         {
             logger.LogInformation("Getting all people");
             await db.OpenAsync();
@@ -38,7 +37,7 @@ namespace ServicesImplementation
             return persons.ToList();
         }
 
-        public async Task<FrontendPerson> GetPerson(int personId)
+        public async Task<FrontendPerson> GetPersonAsync(int personId)
         {
             logger.LogInformation("Getting Person of id {id}", personId);
             await db.OpenAsync();

@@ -1,4 +1,5 @@
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +11,8 @@ using TestFunctionApp;
 var host = new HostBuilder()
     .ConfigureAppConfiguration((context, config) =>
     {
-        config.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true).AddEnvironmentVariables();
+        config.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+              .AddEnvironmentVariables();
     })
     .ConfigureFunctionsWorkerDefaults((host, builder) =>
     {

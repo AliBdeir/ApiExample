@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "Sentry:Dsn": "https://ce5bea30fda96c8019bfbda579cd4d6d@o4503949499564032.ingest.us.sentry.io/4507545910444032",
+  },
+  "ConnectionStrings": {
+    "Default": "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=testdb;Integrated Security=True",
+    "Testing": "Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=testingdb;Integrated Security=True"
+  }
+}
