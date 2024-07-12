@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Deploy to Azure Container Registry and Azure App Service
 
 on:
   push:
@@ -27,3 +27,10 @@ jobs:
       run: |
         docker build ./TestWebApi --tag helennow.azurecr.io/testwebapi:latest
         docker push helennow.azurecr.io/testwebapi:latest
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: helentestwebapi
+        images: helennow.azurecr.io/testwebapi:latest
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
