@@ -25,5 +25,5 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build ./TesetWebApi --file Dockerfile --tag helennow.azurecr.io/testwebapi:latest
+        docker build ./TestWebApi --file Dockerfile --tag helennow.azurecr.io/testwebapi:latest
         docker push helennow.azurecr.io/testwebapi:latest
