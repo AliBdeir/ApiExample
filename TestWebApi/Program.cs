@@ -1,9 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
+string configConnectionString = builder.Configuration.GetConnectionString("AppConfig") ?? throw new Exception("App Configuration Connection String Not Set");
+builder.Configuration.AddAzureAppConfiguration(configConnectionString);
+Console.WriteLine(builder.Configuration["AppName"]);
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

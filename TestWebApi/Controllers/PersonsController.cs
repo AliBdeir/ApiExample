@@ -3,6 +3,7 @@ using ServiceDefinitions;
 
 namespace TestWebApi.Controllers
 {
+    // !! This will NOT work when deployed as it is relying on a local SQL Server database!
     [ApiController]
     [Route("Persons")]
     public class PersonsController(IPersonService service) : ControllerBase
