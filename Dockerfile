@@ -7,13 +7,12 @@ EXPOSE 443
 # Use the SDK image to build the app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["TestWebApi.csproj", "."]
-RUN dotnet restore "TestWebApi.csproj"
 COPY . .
-RUN dotnet build "TestWebApi.csproj" -c Release -o /app/build
+RUN dotnet restore "TestWebApi/TestWebApi.csproj"
+RUN dotnet build "TestWebApi/TestWebApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "TestWebApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "TestWebApi/TestWebApi.csproj" -c Release -o /app/publish
 
 # Use the runtime image to run the app
 FROM base AS final
