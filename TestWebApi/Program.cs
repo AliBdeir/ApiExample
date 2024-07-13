@@ -2,6 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 string configConnectionString = builder.Configuration.GetConnectionString("AppConfig") ?? throw new Exception("App Configuration Connection String Not Set");
+string applicationInsightsKey = builder.Configuration["ApplicationInsights:InstrumentationKey"] ?? throw new Exception("App Configuration Connection String Not Set");
 builder.Configuration.AddAzureAppConfiguration(configConnectionString);
 Console.WriteLine(builder.Configuration["AppName"]);
 builder.Services.AddControllers();
