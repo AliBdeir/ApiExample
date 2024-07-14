@@ -34,6 +34,9 @@ var host = new HostBuilder()
             options.Debug = true;
             options.TracesSampleRate = 1.0;
         });
+
+        // Register the custom middleware
+        builder.UseMiddleware<ExceptionHandlingMiddleware>();
     })
     .ConfigureServices((context, services) =>
     {
@@ -43,8 +46,8 @@ var host = new HostBuilder()
         services.AddScoped(_ => new SqlConnection(configuration.GetConnectionString("Default")));
         services.InjectAppServices();
         services.AddAzureAppConfiguration();
-        // ! Inject BlobServiceClient as a dependency
-        services.AddSingleton(_ => new BlobServiceClient(configuration["AzureBlobConnectionString"]));
+        // Inject BlobServiceClient as a dependency
+        //services.AddSingleton(_ => new BlobServiceClient(configuration["AzureBlobConnectionString"] ?? "This is a test"));
     })
     .Build();
 

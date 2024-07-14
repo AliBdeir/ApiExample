@@ -8,7 +8,8 @@ using Azure.Storage.Blobs;
 
 namespace ServicesImplementation
 {
-    public class PersonService(SqlConnection db, ILoggerFactory loggerFactory, BlobServiceClient blobs) : IPersonService
+    // Commented out BlobServiceClient because I do not have a connection string so I cannot inject it.
+    public class PersonService(SqlConnection db, ILoggerFactory loggerFactory /* ,BlobServiceClient blobs*/) : IPersonService
     {
         private readonly ILogger logger = loggerFactory.CreateLogger<PersonService>();
         public async Task<int> AddPersonAsync(FrontendPerson person)
