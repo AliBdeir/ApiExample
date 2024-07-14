@@ -4,20 +4,31 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Azure;
 using Sentry.Azure.Functions.Worker;
 using System.Data;
 using TestFunctionApp;
+using Azure.Storage.Blobs;
 
 var host = new HostBuilder()
     .ConfigureAppConfiguration((context, config) =>
     {
-        config.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
+        config
+              .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
               .AddEnvironmentVariables();
+
+        var builtConfig = config.Build();
+        var azureAppConfigConnectionString = builtConfig.GetConnectionString("AppConfig");
+
+        if (!string.IsNullOrEmpty(azureAppConfigConnectionString))
+        {
+            config.AddAzureAppConfiguration(azureAppConfigConnectionString);
+        }
     })
-    .ConfigureFunctionsWorkerDefaults((host, builder) =>
+    .ConfigureFunctionsWorkerDefaults((hostContext, builder) =>
     {
-        var configuration = host.Configuration;
-        builder.UseSentry(host, options =>
+        var configuration = hostContext.Configuration;
+        builder.UseSentry(hostContext, options =>
         {
             options.Dsn = configuration["Sentry:Dsn"];
             options.Debug = true;
@@ -31,6 +42,9 @@ var host = new HostBuilder()
         services.ConfigureFunctionsApplicationInsights();
         services.AddScoped(_ => new SqlConnection(configuration.GetConnectionString("Default")));
         services.InjectAppServices();
+        services.AddAzureAppConfiguration();
+        // ! Inject BlobServiceClient as a dependency
+        services.AddSingleton(_ => new BlobServiceClient(configuration["AzureBlobConnectionString"]));
     })
     .Build();
 

@@ -1,3 +1,5 @@
+using Azure.Storage.Blobs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -8,6 +10,7 @@ Console.WriteLine(builder.Configuration["AppName"]);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton(_ => new BlobServiceClient(builder.Configuration["AzureBlobConnectionString"]));
 
 var app = builder.Build();
 

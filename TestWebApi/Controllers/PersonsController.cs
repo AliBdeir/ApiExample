@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Mvc;
 using ServiceDefinitions;
 
 namespace TestWebApi.Controllers
@@ -44,6 +45,12 @@ namespace TestWebApi.Controllers
         {
             await service.DeletePersonAsync(id);
             return NoContent();
+        }
+
+        [HttpGet("{id}/Image")]
+        public async Task<IActionResult> GetUserProfilePicture()
+        {
+            await 
         }
 
         [HttpDelete("Throw")]

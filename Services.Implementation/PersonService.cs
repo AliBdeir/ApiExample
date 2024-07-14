@@ -4,10 +4,11 @@ using System.Data;
 using Microsoft.Extensions.Logging;
 using Azure.Core;
 using Dapper;
+using Azure.Storage.Blobs;
 
 namespace ServicesImplementation
 {
-    public class PersonService(SqlConnection db, ILoggerFactory loggerFactory) : IPersonService
+    public class PersonService(SqlConnection db, ILoggerFactory loggerFactory, BlobServiceClient blobs) : IPersonService
     {
         private readonly ILogger logger = loggerFactory.CreateLogger<PersonService>();
         public async Task<int> AddPersonAsync(FrontendPerson person)

@@ -24,6 +24,7 @@
         /// </summary>
         /// <param name="personId">The ID of the person to be deleted</param>
         Task DeletePersonAsync(int personId);
+
     }
 
     public class FrontendPerson
