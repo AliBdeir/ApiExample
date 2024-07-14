@@ -1,20 +1,20 @@
+using AWS.Logger.SeriLog;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Azure;
 using Sentry.Azure.Functions.Worker;
-using System.Data;
+using Serilog;
+using Serilog.Formatting.Compact;
 using TestFunctionApp;
-using Azure.Storage.Blobs;
 
 var host = new HostBuilder()
     .ConfigureAppConfiguration((context, config) =>
     {
         config
-              .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+              .AddJsonFile($"local.settings.json", optional: true, reloadOnChange: true)
+              .AddJsonFile("appsettings.json", optional: false)
               .AddEnvironmentVariables();
 
         var builtConfig = config.Build();
@@ -46,8 +46,15 @@ var host = new HostBuilder()
         services.AddScoped(_ => new SqlConnection(configuration.GetConnectionString("Default")));
         services.InjectAppServices();
         services.AddAzureAppConfiguration();
-        // Inject BlobServiceClient as a dependency
-        //services.AddSingleton(_ => new BlobServiceClient(configuration["AzureBlobConnectionString"] ?? "This is a test"));
+
+    })
+    .UseSerilog((context, services, loggerConfiguration) =>
+    {
+        loggerConfiguration
+            .ReadFrom.Configuration(context.Configuration) // Reads what it can from local.settings.json
+            .Enrich.FromLogContext()
+            .WriteTo.Console(new RenderedCompactJsonFormatter())
+            .WriteTo.AWSSeriLog(context.Configuration);
     })
     .Build();
 

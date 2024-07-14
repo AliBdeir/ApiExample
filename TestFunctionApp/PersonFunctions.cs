@@ -7,12 +7,12 @@ using ServiceDefinitions;
 
 namespace TestFunctionApp
 {
-    public class PersonFunctions(IPersonService service)
+    public class PersonFunctions(IPersonService service, ILogger<PersonFunctions> logger)
     {
         [Function("GetAllPeople")]
         public async Task<HttpResponseData> GetAllPeople([HttpTrigger(AuthorizationLevel.Function, "get", Route = "Person")] HttpRequestData req)
         {
-            SentrySdk.CaptureMessage("Hello, world!", SentryLevel.Error);
+            logger.LogInformation("Hello, world!");
             var people = await service.GetPeopleAsync();
             var response = req.CreateResponse();
             await response.WriteAsJsonAsync(people);
